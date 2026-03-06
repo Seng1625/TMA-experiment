@@ -1,0 +1,896 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Influence IA — Questionnaire 1 & 2</title>
+  <style>
+:root{--bg:#0b1020;--text:#e9ecf5;--muted:#a9b2d0;--border:rgba(255,255,255,.10);--good:rgba(104,224,194,.95);--bad:rgba(255,120,120,.95)}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+  background:radial-gradient(1200px 700px at 20% 0%, rgba(122,162,255,.25), transparent 55%),
+            radial-gradient(1200px 700px at 90% 10%, rgba(104,224,194,.18), transparent 55%),
+            var(--bg); color:var(--text)}
+.app{max-width:1040px;margin:0 auto;padding:18px}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:10px 0 18px;border-bottom:1px solid var(--border);margin-bottom:18px}
+.brand{font-weight:900}
+.meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.pill{border:1px solid var(--border);padding:6px 10px;border-radius:999px;font-size:13px;color:var(--muted);background:rgba(255,255,255,.03)}
+.screen{display:none}.screen.active{display:block}
+.card{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:14px;padding:14px;margin:14px 0}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.btn{padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,.04);
+  color:var(--text);cursor:pointer;font-weight:900;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+.btn.primary{background:linear-gradient(135deg, rgba(122,162,255,.22), rgba(104,224,194,.15));border-color:rgba(122,162,255,.28)}
+.btn.secondary{background:rgba(255,255,255,.03)}
+.btn.big{padding:16px 16px;border-radius:16px;font-size:16px;min-width:260px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+label{display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--muted)}
+input[type="text"],input[type="number"],select{background:rgba(0,0,0,.25);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:10px;outline:none}
+.canvasWrap{border-radius:16px;overflow:hidden;border:1px solid var(--border);background:rgba(0,0,0,.25)}
+canvas{width:100%;height:auto;display:block}
+.options{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+.optionBtn{flex:1 1 240px;padding:14px;border-radius:14px;border:1px solid var(--border);background:rgba(255,255,255,.03);cursor:pointer;font-weight:900;text-align:center}
+.optionBtn:hover{border-color:rgba(122,162,255,.35)}
+.optionBtn.selected{border-color:rgba(104,224,194,.55);box-shadow:0 0 0 3px rgba(104,224,194,.12) inset}
+.muted{color:var(--muted)} .small{font-size:13px}
+.hero{padding:18px;border-radius:16px;border:1px solid var(--border);
+  background:linear-gradient(135deg, rgba(122,162,255,.15), rgba(104,224,194,.10));}
+.hero h1{margin:0 0 8px;font-size:30px}
+.hero p{margin:0;color:var(--muted)}
+.bullets{margin:12px 0 0;padding-left:18px;color:var(--muted);line-height:1.45}
+.note{border-left:3px solid rgba(104,224,194,.45);padding:10px 12px;background:rgba(255,255,255,.03);border-radius:12px}
+.aiCard{border:1px solid rgba(255,255,255,.12);background:linear-gradient(135deg, rgba(0,0,0,.18), rgba(255,255,255,.03));
+  border-radius:16px;padding:14px}
+.aiBig{font-size:22px;font-weight:950;margin:0 0 8px}
+.aiConfWrap{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.aiConf{font-size:44px;font-weight:1000;line-height:1;color:rgba(255,255,255,.95)}
+.bar{flex:1 1 240px;height:14px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.10);overflow:hidden}
+.bar > div{height:100%;background:linear-gradient(90deg, rgba(104,224,194,.70), rgba(122,162,255,.70));width:0%}
+.confRow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px}
+.confValue{font-weight:950}
+input[type="range"]{width:100%}
+.hr{border:0;border-top:1px solid var(--border);margin:14px 0}
+table{width:100%;border-collapse:separate;border-spacing:0;overflow:hidden;border-radius:12px;border:1px solid var(--border);background:rgba(0,0,0,.18)}
+th,td{padding:10px 10px;border-bottom:1px solid rgba(255,255,255,.06);font-size:13px}
+th{color:var(--muted);text-align:left;font-weight:800;background:rgba(255,255,255,.03)}
+tr:last-child td{border-bottom:none}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.12);font-weight:900}
+.badge.good{color:var(--good);border-color:rgba(104,224,194,.35);background:rgba(104,224,194,.06)}
+.badge.bad{color:var(--bad);border-color:rgba(255,120,120,.35);background:rgba(255,120,120,.06)}
+details{border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,.02);padding:12px}
+details>summary{cursor:pointer;font-weight:900}
+.typeGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.typeItem{display:flex;gap:10px;align-items:flex-start;padding:10px;border:1px solid rgba(255,255,255,.10);border-radius:12px;background:rgba(0,0,0,.15)}
+.typeItem input{margin-top:2px}
+@media (max-width:900px){.grid3{grid-template-columns:1fr}.typeGrid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand">Influence IA — Questionnaire 1 & 2</div>
+      <div class="meta">
+        <span id="participantTag" class="pill"></span>
+        <span id="progressTag" class="pill"></span>
+      </div>
+    </header>
+
+    <section id="screen-menu" class="screen">
+      <div class="hero">
+        <h1>Bienvenue</h1>
+        <p>Regarde bien : l’image / animation n’apparaît que quelques secondes.</p>
+        <ul class="bullets">
+          <li>Tu réponds une première fois + ta confiance.</li>
+          <li>L’IA donne sa réponse + sa confiance.</li>
+          <li>Tu choisis ta réponse finale + ta confiance.</li>
+          <li>Questionnaire 2 : pause “résultats + conseils” toutes les 8 questions (modifiable).</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Choix du questionnaire</h3>
+        <div class="actions">
+          <button class="btn primary big" id="btnPickQ1">Questionnaire 1<br><span class="muted small"> -> Sans feedback</span></button>
+          <button class="btn secondary big" id="btnPickQ2">Questionnaire 2<br><span class="muted small"> -> Avec feedback</span></button>
+          <a class="btn secondary big" href="/types">Voir les types<br><span class="muted small"> -> Mode galerie</span></a>
+        </div>
+        <p class="muted small" style="margin-top:10px;">Choisissez le questionnaire qui vous a été attribué</p>
+      </div>
+
+      <details class="card" open>
+        <summary>Paramètres : ENTRER UNIQUEMENT LE NUMERO QUI VOUS A ETE ATTRIBUE NE RIEN MODIFIER D'AUTRE</summary>
+        <div class="grid3" style="margin-top:12px;">
+          <label>ID participant (facultatif)
+            <input id="participantInput" type="text" placeholder="Ex: P01, Simon… (vide = auto)">
+          </label>
+          <label>Nombre de questions
+            <input id="totalTrials" type="number" min="1" max="200" step="1" value="40">
+          </label>
+          <label>Taille des blocs (feedback)
+            <input id="blockSize" type="number" min="2" max="20" step="1" value="8">
+          </label>
+          <label>Durée stimulus (ms)
+            <input id="stimulusMs" type="number" min="800" step="100" value="1600">
+          </label>
+          <label>Pause entre questions (ms)
+            <input id="itiMs" type="number" min="0" step="50" value="250">
+          </label>
+          <label>Mode
+            <select id="modeSelect">
+              <option value="Q1">Questionnaire 1 (sans feedback)</option>
+              <option value="Q2">Questionnaire 2 (avec feedback)</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="card" style="margin-top:12px;">
+          <div style="font-weight:950;">Types inclus</div>
+          <div class="muted small">Tu peux décocher un type si tu le trouves trop facile (ex: les nombres).</div>
+          <div id="typesChooser" class="typeGrid"></div>
+        </div>
+
+        <div class="actions">
+          <button class="btn primary" id="btnStart">Démarrer</button>
+        </div>
+      </details>
+    </section>
+
+    <section id="screen-stimulus" class="screen">
+      <h2 id="stimulusTitle">Stimulus</h2>
+      <div class="canvasWrap">
+        <canvas id="stimulusCanvas" width="900" height="520"></canvas>
+      </div>
+      <p class="muted">Regarde bien. La question arrive juste après.</p>
+    </section>
+
+    <section id="screen-q1" class="screen">
+      <h2>Question</h2>
+      <p id="q1Text"></p>
+      <div id="q1Options" class="options"></div>
+
+      <div class="card" style="margin-top:12px;">
+        <div class="muted small">Ta confiance (en %)</div>
+        <div class="confRow">
+          <div class="muted small">50% = hasard</div>
+          <div class="confValue"><span id="q1ConfVal">75</span>%</div>
+        </div>
+        <input id="q1Conf" type="range" min="50" max="100" value="75" step="1" />
+        <div class="actions">
+          <button id="btnValidateQ1" class="btn primary" disabled>Valider</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="screen-advice" class="screen">
+      <h2>Avis de l’IA</h2>
+      <div class="aiCard">
+        <p id="aiBig" class="aiBig"></p>
+        <div class="aiConfWrap">
+          <div class="aiConf"><span id="aiConfVal">--</span>%</div>
+          <div class="bar"><div id="aiBar"></div></div>
+        </div>
+        <p class="muted small" style="margin-top:10px;">Décide ensuite si tu gardes ou changes ta réponse.</p>
+      </div>
+      <div class="actions">
+        <button id="btnContinueToQ2" class="btn primary">Continuer</button>
+      </div>
+    </section>
+
+    <section id="screen-q2" class="screen">
+      <h2>Décision finale</h2>
+      <p id="q2Text"></p>
+      <div id="q2Options" class="options"></div>
+
+      <div class="card" style="margin-top:12px;">
+        <div class="muted small">Ta confiance finale (en %)</div>
+        <div class="confRow">
+          <div class="muted small">50% = hasard</div>
+          <div class="confValue"><span id="q2ConfVal">75</span>%</div>
+        </div>
+        <input id="q2Conf" type="range" min="50" max="100" value="75" step="1" />
+        <div class="actions">
+          <button id="btnValidateQ2" class="btn primary" disabled>Valider</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="screen-block" class="screen">
+      <h2>Résultats intermédiaires</h2>
+      <div class="card">
+        <div id="blockHeadline" style="font-weight:950;font-size:18px;"></div>
+        <div class="grid3" style="margin-top:12px;">
+          <div class="note"><div class="muted small">Précision (avant IA)</div><div style="font-weight:950;font-size:22px;" id="statInit">--</div></div>
+          <div class="note"><div class="muted small">Précision (finale)</div><div style="font-weight:950;font-size:22px;" id="statFinal">--</div></div>
+          <div class="note"><div class="muted small">Changements après IA</div><div style="font-weight:950;font-size:22px;" id="statChanged">--</div></div>
+        </div>
+
+        <hr class="hr"/>
+
+        <h3 style="margin:0 0 10px;">Détail des dernières questions</h3>
+        <div class="muted small" style="margin-bottom:10px;">(On indique la réponse correcte pour t’aider à progresser.)</div>
+        <div style="overflow:auto">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Type</th>
+                <th>Ta réponse finale</th>
+                <th>Correct ?</th>
+                <th>Réponse correcte</th>
+                <th>IA</th>
+              </tr>
+            </thead>
+            <tbody id="blockTable"></tbody>
+          </table>
+        </div>
+
+        <hr class="hr"/>
+
+        <h3 style="margin:0 0 10px;">Conseils</h3>
+        <div id="tipsBox" class="muted"></div>
+
+        <div class="actions">
+          <button class="btn primary" id="btnContinueBlock">Continuer</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="screen-demo" class="screen">
+      <h2>Galerie — types de questions</h2>
+      <div class="card">
+        <div id="demoHeader" style="font-weight:950;font-size:18px;"></div>
+        <p class="muted small" id="demoNote"></p>
+        <div class="note" id="demoResult"></div>
+        <div class="actions">
+          <button class="btn primary" id="btnDemoNext">Type suivant</button>
+          <a class="btn secondary" href="/">Retour accueil</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="screen-end" class="screen">
+      <h2>Merci</h2>
+      <div class="card">
+        <h3>Fin</h3>
+        <div class="note"><div>Tu peux télécharger les résultats.</div></div>
+        <hr class="hr"/>
+        <p id="saveStatus" class="muted small"></p>
+        <div class="actions">
+          <button id="btnExportExcel" class="btn primary">Télécharger (Excel)</button>
+          <button id="btnExportCSV" class="btn secondary">Télécharger (CSV)</button>
+          <a class="btn secondary" href="/">Retour accueil</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+<script>
+  window.__PRESET_MODE__ = "{{ preset_mode }}";
+</script>
+
+<script>
+(() => {
+/* Full JS embedded below */
+const $ = (s)=>document.querySelector(s);
+const SCREENS = {menu:$("#screen-menu"),stimulus:$("#screen-stimulus"),q1:$("#screen-q1"),advice:$("#screen-advice"),q2:$("#screen-q2"),block:$("#screen-block"),demo:$("#screen-demo"),end:$("#screen-end")};
+const canvas = $("#stimulusCanvas");
+const ctx = canvas.getContext("2d");
+
+const participantTag = $("#participantTag");
+const progressTag = $("#progressTag");
+
+const btnPickQ1 = $("#btnPickQ1");
+const btnPickQ2 = $("#btnPickQ2");
+const btnStart = $("#btnStart");
+const btnContinueToQ2 = $("#btnContinueToQ2");
+const btnContinueBlock = $("#btnContinueBlock");
+const btnExportExcel = $("#btnExportExcel");
+const btnExportCSV = $("#btnExportCSV");
+
+const stimulusTitle = $("#stimulusTitle");
+const q1Text = $("#q1Text");
+const q2Text = $("#q2Text");
+const q1Options = $("#q1Options");
+const q2Options = $("#q2Options");
+
+const aiBig = $("#aiBig");
+const aiConfVal = $("#aiConfVal");
+const aiBar = $("#aiBar");
+const saveStatus = $("#saveStatus");
+
+const inputParticipant = $("#participantInput");
+const inputTotalTrials = $("#totalTrials");
+const inputStimulusMs = $("#stimulusMs");
+const inputItiMs = $("#itiMs");
+const inputBlockSize = $("#blockSize");
+const inputMode = $("#modeSelect");
+
+const typesChooser = $("#typesChooser");
+
+const q1Conf = $("#q1Conf");
+const q1ConfVal = $("#q1ConfVal");
+const q2Conf = $("#q2Conf");
+const q2ConfVal = $("#q2ConfVal");
+
+const btnValidateQ1 = $("#btnValidateQ1");
+const btnValidateQ2 = $("#btnValidateQ2");
+
+const blockHeadline = $("#blockHeadline");
+const statInit = $("#statInit");
+const statFinal = $("#statFinal");
+const statChanged = $("#statChanged");
+const blockTable = $("#blockTable");
+const tipsBox = $("#tipsBox");
+
+// demo
+const demoHeader = $("#demoHeader");
+const demoNote = $("#demoNote");
+const demoResult = $("#demoResult");
+const btnDemoNext = $("#btnDemoNext");
+
+let CONFIG = { stimulusDurationMs:1600, itiMs:250, totalTrials:40, blockSize:8, mode:"Q1", typesIncluded:[] };
+
+let participantId="", sessionStartedAt="";
+let trials=[], trialIndex=0, results=[];
+let rafId=null, stimulusStart=0, currentStopper=null;
+
+// demo
+let demoTrials=[], demoIndex=0;
+
+const TASKS = [
+  {id:"bar_compare", label:"Barres (moyenne)"},
+  {id:"dot_motion", label:"Nuage (gauche/droite)"},
+  {id:"orient_bias", label:"Lignes (inclinaison)"},
+  {id:"line_trend", label:"Courbe (monte/descend)"},
+  {id:"color_majority", label:"Couleur (majoritaire)"},
+  {id:"dot_count", label:"Points (quantité)"},
+  {id:"number_compare", label:"Nombre (plus grand)"},
+  {id:"brightness", label:"Luminosité (plus clair)"},
+  {id:"rotation", label:"Rotation (sens)"},
+  {id:"center_circle", label:"Cercle (plus grand)"},
+];
+const TASK_LABELS = Object.fromEntries(TASKS.map(t=>[t.id, t.label]));
+
+// Feedback library
+const FEEDBACK_LIBRARY = {
+  bar_compare: { tip:"Barres : compare la tendance globale (moyenne), pas une barre isolée.", ai_note:"IA : sur des différences très faibles, elle peut hésiter." },
+  dot_motion: { tip:"Nuage : fixe le centre du nuage, pas des points isolés.", ai_note:"IA : bonne mais peut se tromper sur un drift très subtil." },
+  orient_bias: { tip:"Inclinaison : cherche la direction dominante (\\ ou /).", ai_note:"IA : moins fiable si l’inclinaison est très dispersée." },
+  line_trend: { tip:"Courbe : compare début vs fin (tendance globale).", ai_note:"IA : fiable si la tendance est nette." },
+  color_majority: { tip:"Couleur : perçois la dominante globale.", ai_note:"IA : peut se tromper si la différence est minime." },
+  dot_count: { tip:"Quantité : repère la densité globale.", ai_note:"IA : peut se tromper sur de très petites différences." },
+  number_compare: { tip:"Nombre : lecture rapide, compare dizaines/unités.", ai_note:"IA : généralement très forte ici." },
+  brightness: { tip:"Luminosité : compare la clarté moyenne, pas un seul carré.", ai_note:"IA : moins fiable si bruit fort." },
+  rotation: { tip:"Rotation : suis un point pour identifier le sens.", ai_note:"IA : peut confondre si rotation lente + bruit." },
+  center_circle: { tip:"Cercle : compare la taille du disque central.", ai_note:"IA : fiable si différence visible." },
+};
+
+function showScreen(name){ Object.values(SCREENS).forEach(s=>s.classList.remove("active")); SCREENS[name].classList.add("active"); }
+function randInt(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
+function shuffle(arr){ for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];} return arr; }
+function nowISO(){ return new Date().toISOString(); }
+function msSince(t0){ return Math.max(0, performance.now()-t0); }
+function clamp(x,a,b){ return Math.max(a, Math.min(b,x)); }
+function randn(){ let u=0,v=0; while(u===0)u=Math.random(); while(v===0)v=Math.random(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); }
+
+function setProgress(){
+  if(CONFIG.mode === "TYPES") progressTag.textContent = `Type ${Math.min(demoIndex+1, demoTrials.length)} / ${demoTrials.length}`;
+  else progressTag.textContent = `Question ${Math.min(trialIndex+1,trials.length)} / ${trials.length}`;
+}
+function resetCanvas(){ ctx.setTransform(1,0,0,1,0,0); ctx.clearRect(0,0,canvas.width,canvas.height); }
+function drawFrameBg(showMidline=true){
+  ctx.fillStyle="rgba(0,0,0,0.30)"; ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.strokeStyle="rgba(255,255,255,0.10)"; ctx.lineWidth=2; ctx.strokeRect(16,16,canvas.width-32,canvas.height-32);
+  if(showMidline){
+    ctx.strokeStyle="rgba(255,255,255,0.05)"; ctx.beginPath();
+    ctx.moveTo(canvas.width/2,24); ctx.lineTo(canvas.width/2,canvas.height-24); ctx.stroke();
+  }
+}
+
+// Type prefs
+function loadTypePrefs(){
+  try{ const raw = localStorage.getItem("typesIncluded_v1"); if(!raw) return TASKS.map(t=>t.id);
+    const arr = JSON.parse(raw); if(Array.isArray(arr) && arr.length) return arr.filter(x=>TASK_LABELS[x]); }catch{}
+  return TASKS.map(t=>t.id);
+}
+function saveTypePrefs(arr){ try{ localStorage.setItem("typesIncluded_v1", JSON.stringify(arr)); }catch{} }
+function renderTypesChooser(){
+  const selected = new Set(CONFIG.typesIncluded);
+  typesChooser.innerHTML = "";
+  TASKS.forEach(t=>{
+    const wrap=document.createElement("div"); wrap.className="typeItem";
+    const cb=document.createElement("input"); cb.type="checkbox"; cb.checked=selected.has(t.id);
+    cb.onchange=()=>{ const next=new Set(CONFIG.typesIncluded); if(cb.checked) next.add(t.id); else next.delete(t.id);
+      CONFIG.typesIncluded=[...next]; saveTypePrefs(CONFIG.typesIncluded); };
+    const txt=document.createElement("div"); txt.innerHTML=`<div style="font-weight:950;">${t.label}</div><div class="muted small">${t.id}</div>`;
+    wrap.appendChild(cb); wrap.appendChild(txt); typesChooser.appendChild(wrap);
+  });
+}
+
+// AI schedule
+function buildAISchedule(n){
+  const forcedWrong=new Map(); if(n>=8) forcedWrong.set(8,55); if(n>=15) forcedWrong.set(15,95); if(n>=24) forcedWrong.set(24,65); if(n>=33) forcedWrong.set(33,70);
+  const confCycle=[70,75,80,85,90,78,82,88]; const schedule=[];
+  for(let i=1;i<=n;i++){
+    if(forcedWrong.has(i)){ schedule.push({forceCorrect:false, confidence: forcedWrong.get(i)}); continue; }
+    let conf; if(i<=7) conf=85; else if(i<=14) conf=78; else conf=confCycle[(i-16)%confCycle.length];
+    schedule.push({forceCorrect:true, confidence: conf});
+  }
+  return schedule;
+}
+function aiForTrial(trial, aiSpec){
+  const correct=trial.correct, options=trial.options; let suggestion=correct, isCorrect=true;
+  if(!aiSpec.forceCorrect){ isCorrect=false; suggestion = options.find(o=>o!==correct) || correct; }
+  return {suggestion, confidence: aiSpec.confidence, isCorrect};
+}
+
+// Trial generators
+function makeDotMotionTrial(rep){
+  const correct=Math.random()<0.5?"Gauche":"Droite"; const drift=correct==="Gauche"?-1:1;
+  const options=["Gauche","Droite"];
+  return {id:`dotMotion_${rep}_${randInt(1000,9999)}`, type:"dot_motion", title:TASK_LABELS.dot_motion,
+    prompt:"Le nuage allait-il plutôt vers la gauche ou vers la droite ?", options, correct,
+    stimulus:{drift, driftStrength:0.05+Math.random()*0.08, jitter:1.05+Math.random()*0.55, n:240}};
+}
+function makeLineTrendTrial(rep){
+  const correct=Math.random()<0.5?"Monte":"Descend"; const slope = correct==="Monte"?-1:1;
+  const options=["Monte","Descend"];
+  return {id:`lineTrend_${rep}_${randInt(1000,9999)}`, type:"line_trend", title:TASK_LABELS.line_trend,
+    prompt:"La courbe avait-elle plutôt tendance à monter ou à descendre ?", options, correct,
+    stimulus:{slope, slopeStrength:0.18+Math.random()*0.18, noise:3.4+Math.random()*2.2}};
+}
+function makeBarCompareTrial(rep){
+  const correct=Math.random()<0.5?"Gauche":"Droite"; const options=["Gauche","Droite"];
+  const baseMean=0.50+Math.random()*0.10; const delta=0.012+Math.random()*0.018;
+  const leftMean = correct==="Gauche"?baseMean+delta:baseMean; const rightMean = correct==="Droite"?baseMean+delta:baseMean;
+  return {id:`barCompare_${rep}_${randInt(1000,9999)}`, type:"bar_compare", title:TASK_LABELS.bar_compare,
+    prompt:"Quel côté a une moyenne de barres légèrement plus haute ?", options, correct,
+    stimulus:{leftMean,rightMean,spread:0.16,barsPerSide:8}};
+}
+function makeDotCountTrial(rep){
+  const correct=Math.random()<0.5?"Gauche":"Droite"; const options=["Gauche","Droite"];
+  const base=randInt(56,74), diff=randInt(1,3);
+  const leftCount = correct==="Gauche"?base+diff:base; const rightCount = correct==="Droite"?base+diff:base;
+  return {id:`dotCount_${rep}_${randInt(1000,9999)}`, type:"dot_count", title:TASK_LABELS.dot_count,
+    prompt:"Où y avait-il légèrement plus de points ?", options, correct, stimulus:{leftCount,rightCount}};
+}
+function makeOrientBiasTrial(rep){
+  const correct=Math.random()<0.5?"Gauche":"Droite"; const bias=correct==="Gauche"?-16:+16; const options=["Gauche","Droite"];
+  return {id:`orientBias_${rep}_${randInt(1000,9999)}`, type:"orient_bias", title:TASK_LABELS.orient_bias,
+    prompt:"Les petites lignes penchaient-elles plutôt vers la gauche ou vers la droite ?", options, correct,
+    stimulus:{biasDeg:bias, sdDeg:42, n:140, len:18}};
+}
+function makeColorMajorityTrial(rep){
+  const correct=Math.random()<0.5?"Bleu":"Vert"; const options=["Bleu","Vert"];
+  const total=210; const pMajor=0.52+Math.random()*0.04; const nMajor=Math.round(total*pMajor);
+  const nBlue = correct==="Bleu"?nMajor:(total-nMajor); const nGreen = correct==="Vert"?nMajor:(total-nMajor);
+  return {id:`colorMaj_${rep}_${randInt(1000,9999)}`, type:"color_majority", title:TASK_LABELS.color_majority,
+    prompt:"Quelle couleur était légèrement majoritaire ?", options, correct, stimulus:{nBlue,nGreen}};
+}
+function makeRotationTrial(rep){
+  const correct=Math.random()<0.5?"Horaire":"Anti-horaire"; const dir=correct==="Horaire"?1:-1;
+  const options=["Horaire","Anti-horaire"];
+  return {id:`rotation_${rep}_${randInt(1000,9999)}`, type:"rotation", title:TASK_LABELS.rotation,
+    prompt:"Le mouvement tournait-il dans le sens horaire ou anti-horaire ?", options, correct,
+    stimulus:{dir, n:140, omega:0.00085+Math.random()*0.0006}};
+}
+function makeNumberCompareTrial(rep){
+  const correctSide=Math.random()<0.5?"Gauche":"Droite"; const options=["Gauche","Droite"];
+  const a=randInt(40,99), diff=randInt(1,2);
+  const left = correctSide==="Gauche"?a+diff:a; const right=correctSide==="Droite"?a+diff:a;
+  return {id:`num_${rep}_${randInt(1000,9999)}`, type:"number_compare", title:TASK_LABELS.number_compare,
+    prompt:"Quel côté affichait le nombre le plus grand ?", options, correct:correctSide, stimulus:{left,right}};
+}
+function makeBrightnessTrial(rep){
+  const correct=Math.random()<0.5?"Gauche":"Droite"; const options=["Gauche","Droite"];
+  const delta=0.03+Math.random()*0.03; const leftBias=correct==="Gauche"?delta:0; const rightBias=correct==="Droite"?delta:0;
+  return {id:`bright_${rep}_${randInt(1000,9999)}`, type:"brightness", title:TASK_LABELS.brightness,
+    prompt:"Quelle moitié était légèrement plus lumineuse ?", options, correct, stimulus:{leftBias,rightBias}};
+}
+function makeCenterCircleTrial(rep){
+  const correct=Math.random()<0.5?"Gauche":"Droite"; const options=["Gauche","Droite"];
+  const baseR=30+randInt(-1,1); const delta=randInt(4,6);
+  const leftR = correct==="Gauche"?baseR+delta:baseR; const rightR = correct==="Droite"?baseR+delta:baseR;
+  return {id:`center_${rep}_${randInt(1000,9999)}`, type:"center_circle", title:TASK_LABELS.center_circle,
+    prompt:"Quel cercle central était le plus grand ?", options, correct, stimulus:{leftR,rightR}};
+}
+function makeTrial(type, rep, aiSpec){
+  const t = type==="dot_motion"?makeDotMotionTrial(rep):
+            type==="line_trend"?makeLineTrendTrial(rep):
+            type==="bar_compare"?makeBarCompareTrial(rep):
+            type==="dot_count"?makeDotCountTrial(rep):
+            type==="orient_bias"?makeOrientBiasTrial(rep):
+            type==="color_majority"?makeColorMajorityTrial(rep):
+            type==="rotation"?makeRotationTrial(rep):
+            type==="number_compare"?makeNumberCompareTrial(rep):
+            type==="brightness"?makeBrightnessTrial(rep):
+            makeCenterCircleTrial(rep);
+  if(aiSpec) t.ai = aiForTrial(t, aiSpec);
+  return t;
+}
+function buildTrials(n){
+  const schedule=buildAISchedule(n); const out=[]; const counts={};
+  const plan = (CONFIG.typesIncluded && CONFIG.typesIncluded.length) ? CONFIG.typesIncluded.slice() : TASKS.map(t=>t.id);
+  for(let i=0;i<n;i++){
+    const type = plan[i%plan.length];
+    counts[type]=(counts[type]||0)+1;
+    out.push(makeTrial(type, counts[type], schedule[i]));
+  }
+  return out;
+}
+function buildDemoTrials(){
+  const counts={}; return TASKS.map(t=>{
+    counts[t.id]=(counts[t.id]||0)+1; return makeTrial(t.id, counts[t.id], null);
+  });
+}
+
+// Renderers
+function startStimulus(trial, onDone){
+  resetCanvas(); stimulusStart=performance.now();
+  if(currentStopper){ try{currentStopper()}catch{} currentStopper=null; }
+  const drawFn = trial.type==="dot_motion"?makeDotMotionRenderer(trial.stimulus):
+                 trial.type==="line_trend"?makeLineTrendRenderer(trial.stimulus):
+                 trial.type==="bar_compare"?makeBarCompareRenderer(trial.stimulus):
+                 trial.type==="dot_count"?makeDotCountRenderer(trial.stimulus):
+                 trial.type==="orient_bias"?makeOrientBiasRenderer(trial.stimulus):
+                 trial.type==="color_majority"?makeColorMajorityRenderer(trial.stimulus):
+                 trial.type==="rotation"?makeRotationRenderer(trial.stimulus):
+                 trial.type==="number_compare"?makeNumberCompareRenderer(trial.stimulus):
+                 trial.type==="brightness"?makeBrightnessRenderer(trial.stimulus):
+                 makeCenterCircleRenderer(trial.stimulus);
+  let stopped=false;
+  function loop(){
+    if(stopped) return;
+    const elapsed=performance.now()-stimulusStart;
+    drawFrameBg(trial.type !== "color_majority"); drawFn(elapsed);
+    if(elapsed>=CONFIG.stimulusDurationMs){ stopped=true; if(rafId) cancelAnimationFrame(rafId); rafId=null; onDone(); return; }
+    rafId=requestAnimationFrame(loop);
+  }
+  currentStopper=()=>{ stopped=true; if(rafId) cancelAnimationFrame(rafId); rafId=null; };
+  loop();
+}
+function makeDotMotionRenderer(p){
+  const {drift,driftStrength,jitter,n}=p, pad=30, w=canvas.width,h=canvas.height;
+  const pts=Array.from({length:n},()=>({x:randInt(pad,w-pad),y:randInt(pad,h-pad),vx:(Math.random()-0.5)*0.7,vy:(Math.random()-0.5)*0.7}));
+  return ()=>{ for(const pt of pts){
+      pt.vx += (Math.random()-0.5)*jitter*0.10 + drift*driftStrength*0.02;
+      pt.vy += (Math.random()-0.5)*jitter*0.10;
+      pt.x += pt.vx + drift*driftStrength*1.0; pt.y += pt.vy;
+      if(pt.x<pad){pt.x=pad;pt.vx*=-0.6} if(pt.x>w-pad){pt.x=w-pad;pt.vx*=-0.6}
+      if(pt.y<pad){pt.y=pad;pt.vy*=-0.6} if(pt.y>h-pad){pt.y=h-pad;pt.vy*=-0.6}
+    }
+    ctx.fillStyle="rgba(122,162,255,0.78)";
+    for(const pt of pts){ ctx.beginPath(); ctx.arc(pt.x,pt.y,2,0,Math.PI*2); ctx.fill(); }
+  };
+}
+function makeLineTrendRenderer(p){
+  const {slope,slopeStrength,noise}=p, w=canvas.width,h=canvas.height,pad=60; const pts=[]; let y=h/2;
+  for(let i=0;i<70;i++){ y += slope*slopeStrength + (Math.random()-0.5)*noise; y=clamp(y,pad,h-pad); pts.push({x:pad+(i/69)*(w-2*pad),y}); }
+  return (elapsed)=>{ ctx.strokeStyle="rgba(255,255,255,0.10)"; ctx.lineWidth=2; ctx.beginPath();
+    ctx.moveTo(pad,h-pad); ctx.lineTo(w-pad,h-pad); ctx.moveTo(pad,h-pad); ctx.lineTo(pad,pad); ctx.stroke();
+    const reveal=Math.min(1, elapsed/CONFIG.stimulusDurationMs), count=Math.max(2, Math.floor(pts.length*reveal));
+    ctx.strokeStyle="rgba(104,224,194,0.92)"; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(pts[0].x,pts[0].y);
+    for(let i=1;i<count;i++) ctx.lineTo(pts[i].x,pts[i].y); ctx.stroke();
+  };
+}
+function makeBarCompareRenderer(p){
+  const {leftMean,rightMean,spread,barsPerSide}=p, w=canvas.width,h=canvas.height,pad=70;
+  const mk=(m)=>Array.from({length:barsPerSide},()=>clamp(m+(Math.random()-0.5)*spread,0.08,0.92));
+  const L=mk(leftMean), R=mk(rightMean);
+  return ()=>{ const mid=w/2, areaW=w-2*pad, sideW=areaW/2-30;
+    drawBars(pad,pad,sideW,h-2*pad,L,"Gauche"); drawBars(mid+30,pad,sideW,h-2*pad,R,"Droite"); };
+  function drawBars(x,y,ww,hh,bars,label){
+    ctx.fillStyle="rgba(255,255,255,0.65)"; ctx.font="16px system-ui"; ctx.fillText(label,x,y-18);
+    const gap=8, barW=(ww-gap*(bars.length-1))/bars.length;
+    for(let i=0;i<bars.length;i++){
+      const bh=bars[i]*hh, bx=x+i*(barW+gap), by=y+(hh-bh);
+      ctx.fillStyle="rgba(122,162,255,0.72)"; ctx.fillRect(bx,by,barW,bh);
+      ctx.strokeStyle="rgba(255,255,255,0.08)"; ctx.strokeRect(bx,by,barW,bh);
+    }
+  }
+}
+function makeDotCountRenderer(p){
+  const {leftCount,rightCount}=p, w=canvas.width,h=canvas.height,pad=40;
+  const leftBox={x:pad,y:pad,w:w/2-pad*1.5,h:h-2*pad}, rightBox={x:w/2+pad*0.5,y:pad,w:w/2-pad*1.5,h:h-2*pad};
+  const scatter=(box,n)=>Array.from({length:n},()=>({x:box.x+10+Math.random()*(box.w-20),y:box.y+10+Math.random()*(box.h-20),r:2+Math.random()*1.2}));
+  const L=scatter(leftBox,leftCount), R=scatter(rightBox,rightCount);
+  return ()=>{ ctx.strokeStyle="rgba(255,255,255,0.12)"; ctx.lineWidth=2;
+    ctx.strokeRect(leftBox.x,leftBox.y,leftBox.w,leftBox.h); ctx.strokeRect(rightBox.x,rightBox.y,rightBox.w,rightBox.h);
+    ctx.fillStyle="rgba(104,224,194,0.80)"; for(const pt of L){ctx.beginPath();ctx.arc(pt.x,pt.y,pt.r,0,Math.PI*2);ctx.fill();}
+    ctx.fillStyle="rgba(122,162,255,0.80)"; for(const pt of R){ctx.beginPath();ctx.arc(pt.x,pt.y,pt.r,0,Math.PI*2);ctx.fill();}
+  };
+}
+function makeOrientBiasRenderer(p){
+  const {biasDeg,sdDeg,n,len}=p, w=canvas.width,h=canvas.height,pad=40;
+  const segs=Array.from({length:n},()=>{ const angle=(biasDeg+randn()*sdDeg)*Math.PI/180;
+    return {x:pad+Math.random()*(w-2*pad), y:pad+Math.random()*(h-2*pad), a:angle}; });
+  return ()=>{ ctx.strokeStyle="rgba(255,255,255,0.55)"; ctx.lineWidth=2;
+    for(const s of segs){ const dx=Math.cos(s.a)*len, dy=Math.sin(s.a)*len;
+      ctx.beginPath(); ctx.moveTo(s.x-dx,s.y-dy); ctx.lineTo(s.x+dx,s.y+dy); ctx.stroke(); }
+  };
+}
+function makeColorMajorityRenderer(p){
+  const {nBlue,nGreen}=p, w=canvas.width,h=canvas.height,pad=30; const dots=[];
+  for(let i=0;i<nBlue;i++) dots.push({x:pad+Math.random()*(w-2*pad),y:pad+Math.random()*(h-2*pad),c:"rgba(122,162,255,0.85)"});
+  for(let i=0;i<nGreen;i++) dots.push({x:pad+Math.random()*(w-2*pad),y:pad+Math.random()*(h-2*pad),c:"rgba(104,224,194,0.85)"});
+  shuffle(dots);
+  return ()=>{ for(const d of dots){ ctx.fillStyle=d.c; ctx.beginPath(); ctx.arc(d.x,d.y,2.3,0,Math.PI*2); ctx.fill(); } };
+}
+function makeRotationRenderer(p){
+  const {dir,n,omega}=p, w=canvas.width,h=canvas.height, center={x:w/2,y:h/2};
+  const baseR=Math.min(w,h)*0.28; const dots=Array.from({length:n},(_,i)=>({a:(i/n)*Math.PI*2+Math.random()*0.15, r:baseR+randn()*18}));
+  return (elapsed)=>{ const t=elapsed;
+    for(const d of dots){ const a=d.a+dir*(t*omega); const x=center.x+Math.cos(a)*d.r, y=center.y+Math.sin(a)*d.r;
+      ctx.fillStyle="rgba(122,162,255,0.78)"; ctx.beginPath(); ctx.arc(x,y,2.2,0,Math.PI*2); ctx.fill(); }
+  };
+}
+function makeNumberCompareRenderer(p){
+  const {left,right}=p;
+  return ()=>{ ctx.fillStyle="rgba(255,255,255,0.55)"; ctx.font="16px system-ui";
+    ctx.fillText("Gauche", canvas.width*0.24, 70); ctx.fillText("Droite", canvas.width*0.62, 70);
+    ctx.fillStyle="rgba(122,162,255,0.90)"; ctx.font="72px system-ui"; ctx.fillText(String(left), canvas.width*0.22, canvas.height*0.60);
+    ctx.fillStyle="rgba(104,224,194,0.90)"; ctx.fillText(String(right), canvas.width*0.60, canvas.height*0.60);
+  };
+}
+function makeBrightnessRenderer(p){
+  const {leftBias,rightBias}=p, w=canvas.width,h=canvas.height,pad=26;
+  return ()=>{ const mid=w/2;
+    drawNoiseRect(pad,pad,mid-pad*1.5,h-2*pad,leftBias);
+    drawNoiseRect(mid+pad*0.5,pad,mid-pad*1.5,h-2*pad,rightBias);
+  };
+  function drawNoiseRect(x,y,ww,hh,bias){
+    const step=6;
+    for(let yy=y; yy<y+hh; yy+=step){
+      for(let xx=x; xx<x+ww; xx+=step){
+        const base=0.32+Math.random()*0.18+bias; const a=clamp(base,0.10,0.65);
+        ctx.fillStyle=`rgba(255,255,255,${a})`; ctx.fillRect(xx,yy,step,step);
+      }
+    }
+  }
+}
+function makeCenterCircleRenderer(p){
+  const {leftR,rightR}=p, w=canvas.width,h=canvas.height;
+  const leftC={x:w*0.32,y:h*0.52}, rightC={x:w*0.68,y:h*0.52};
+  return ()=>{ ctx.fillStyle="rgba(104,224,194,0.80)"; ctx.beginPath(); ctx.arc(leftC.x,leftC.y,leftR,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle="rgba(122,162,255,0.80)"; ctx.beginPath(); ctx.arc(rightC.x,rightC.y,rightR,0,Math.PI*2); ctx.fill(); };
+}
+
+// UI options
+function renderOptions(container, options, onPick, pre=null){
+  container.innerHTML="";
+  options.forEach(opt=>{
+    const b=document.createElement("button");
+    b.className="optionBtn"+(pre===opt?" selected":"");
+    b.textContent=opt;
+    b.onclick=()=>onPick(opt);
+    container.appendChild(b);
+  });
+}
+
+// Mode
+function applyMode(mode){ CONFIG.mode = mode; if(mode==="Q1"||mode==="Q2") inputMode.value = mode; }
+
+function startSession(){
+  CONFIG.stimulusDurationMs = Math.max(800, parseInt(inputStimulusMs.value,10) || 1600);
+  CONFIG.itiMs = Math.max(0, parseInt(inputItiMs.value,10) || 250);
+  CONFIG.totalTrials = clamp(parseInt(inputTotalTrials.value,10) || 40, 1, 200);
+  CONFIG.blockSize = clamp(parseInt(inputBlockSize.value,10) || 8, 2, 20);
+  CONFIG.mode = inputMode.value || CONFIG.mode || "Q1";
+  if(!CONFIG.typesIncluded || !CONFIG.typesIncluded.length) CONFIG.typesIncluded = loadTypePrefs();
+
+  const manualId = (inputParticipant.value || "").trim();
+  participantId = manualId ? manualId : `P${randInt(10000,99999)}`;
+  sessionStartedAt = nowISO();
+  participantTag.textContent = participantId;
+
+  trials = buildTrials(CONFIG.totalTrials);
+  trialIndex = 0; results = []; saveStatus.textContent = "";
+  q1Conf.value=75; q2Conf.value=75; q1ConfVal.textContent="75"; q2ConfVal.textContent="75";
+  nextTrial();
+}
+function nextTrial(){
+  if(trialIndex >= trials.length){ setProgress(); showScreen("end"); return; }
+  const trial = trials[trialIndex]; setProgress();
+  stimulusTitle.textContent = `${trial.title}`;
+  showScreen("stimulus");
+  startStimulus(trial, ()=> setTimeout(()=>askQ1(trial), CONFIG.itiMs));
+}
+let q1Selected=null, q2Selected=null;
+
+function askQ1(trial){
+  showScreen("q1");
+  q1Text.textContent = trial.prompt;
+  btnValidateQ1.disabled = true;
+  q1Selected = null;
+  const pickHandler = (pick)=>{
+    q1Selected = pick;
+    renderOptions(q1Options, trial.options, pickHandler, q1Selected);
+    btnValidateQ1.disabled = false;
+  };
+
+  q1Conf.value=75; q1ConfVal.textContent="75";
+  const t0 = performance.now();
+  renderOptions(q1Options, trial.options, pickHandler, q1Selected);
+  btnValidateQ1.onclick = ()=>{
+    trial._initial = { choice:q1Selected, conf:parseInt(q1Conf.value,10), rt:msSince(t0) };
+    if(CONFIG.mode === "TYPES"){ showDemoResult(trial); return; }
+    showAdvice(trial);
+  };
+}
+
+function showAdvice(trial){
+  showScreen("advice");
+  aiBig.textContent = `L’IA propose : ${trial.ai.suggestion}`;
+  aiConfVal.textContent = String(trial.ai.confidence);
+  aiBar.style.width = `${trial.ai.confidence}%`;
+  btnContinueToQ2.onclick = ()=> askQ2(trial);
+}
+
+function askQ2(trial){
+  showScreen("q2");
+  q2Text.textContent = trial.prompt;
+  q2Selected = trial._initial.choice;
+  q2Conf.value = trial._initial.conf; q2ConfVal.textContent = String(q2Conf.value);
+  btnValidateQ2.disabled = false;
+
+  
+  const pickHandler2 = (pick)=>{
+    q2Selected = pick;
+    renderOptions(q2Options, trial.options, pickHandler2, q2Selected);
+    btnValidateQ2.disabled = false;
+  };
+const t0 = performance.now();
+  renderOptions(q2Options, trial.options, pickHandler2, q2Selected);
+
+  btnValidateQ2.onclick = ()=>{
+    const globalIndex = trialIndex + 1;
+    const blockIndex = Math.floor((globalIndex-1)/CONFIG.blockSize) + 1;
+    const trialInBlock = ((globalIndex-1) % CONFIG.blockSize) + 1;
+
+    const row = {
+      participantId, sessionStartedAt,
+      mode: CONFIG.mode,
+      blockSize: CONFIG.blockSize,
+      blockIndex, trialInBlock,
+      trialIndex: globalIndex,
+      trialId: trial.id,
+      type: trial.type, title: trial.title,
+      prompt: trial.prompt,
+      options: trial.options,
+      correct: trial.correct,
+      aiSuggestion: trial.ai.suggestion,
+      aiConfidence: trial.ai.confidence,
+      aiIsCorrect: trial.ai.isCorrect,
+      initialChoice: trial._initial.choice,
+      initialConfidence: trial._initial.conf,
+      initialRTms: Math.round(trial._initial.rt),
+      initialCorrect: trial._initial.choice === trial.correct,
+      finalChoice: q2Selected,
+      finalConfidence: parseInt(q2Conf.value,10),
+      finalRTms: Math.round(msSince(t0)),
+      finalCorrect: q2Selected === trial.correct,
+      changed: trial._initial.choice !== q2Selected,
+      followedAI_final: q2Selected === trial.ai.suggestion,
+      timestamp: nowISO(),
+    };
+    results.push(row);
+    trialIndex += 1;
+
+    const isBlockEnd = (trialIndex % CONFIG.blockSize === 0);
+    const isNotLast = (trialIndex < trials.length);
+
+    if(CONFIG.mode === "Q2" && isBlockEnd && isNotLast){ showBlockFeedback(); return; }
+    setTimeout(nextTrial, CONFIG.itiMs);
+  };
+}
+
+// Block feedback
+function pct(n,d){ return d===0 ? 0 : Math.round((100*n/d)*10)/10; }
+function showBlockFeedback(){
+  const end=trialIndex, start=Math.max(0,end-CONFIG.blockSize);
+  const slice=results.slice(start,end);
+  const bIndex=slice.length ? slice[0].blockIndex : Math.floor((end-1)/CONFIG.blockSize)+1;
+  blockHeadline.textContent = `Bloc ${bIndex} — Questions ${start+1} à ${end}`;
+  const initAcc=slice.filter(r=>r.initialCorrect).length;
+  const finAcc=slice.filter(r=>r.finalCorrect).length;
+  const changed=slice.filter(r=>r.changed).length;
+  statInit.textContent = `${pct(initAcc, slice.length)}%`;
+  statFinal.textContent = `${pct(finAcc, slice.length)}%`;
+  statChanged.textContent = `${pct(changed, slice.length)}%`;
+  blockTable.innerHTML="";
+  slice.forEach(r=>{
+    const ok=!!r.finalCorrect, aiOk=!!r.aiIsCorrect;
+    const tr=document.createElement("tr");
+    tr.innerHTML = `<td>${r.trialIndex}</td><td>${TASK_LABELS[r.type]||r.type}</td>
+      <td>${r.finalChoice} <span class="muted small">(${r.finalConfidence}%)</span></td>
+      <td>${ok?`<span class="badge good">Bon</span>`:`<span class="badge bad">Faux</span>`}</td>
+      <td>${r.correct}</td>
+      <td>${r.aiSuggestion} <span class="muted small">(${r.aiConfidence}%)</span> ${aiOk?`<span class="badge good">OK</span>`:`<span class="badge bad">KO</span>`}</td>`;
+    blockTable.appendChild(tr);
+  });
+  const types=[...new Set(slice.map(r=>r.type))];
+  const parts=[];
+  parts.push(`<div class="note"><strong>Objectif :</strong> progresser sur la lecture rapide, et calibrer ta confiance (toi vs IA).</div>`);
+  parts.push(`<ul class="bullets">` + types.map(t=>{
+    const it=FEEDBACK_LIBRARY[t]||{tip:"",ai_note:""};
+    const tip = it.tip ? `<div><strong>${TASK_LABELS[t]||t} :</strong> ${it.tip}</div>` : `<div><strong>${TASK_LABELS[t]||t} :</strong></div>`;
+    const note = it.ai_note ? `<div class="small muted">↳ ${it.ai_note}</div>` : "";
+    return `<li>${tip}${note}</li>`;
+  }).join("") + `</ul>`);
+  tipsBox.innerHTML = parts.join("");
+  btnContinueBlock.onclick = ()=> setTimeout(nextTrial, 60);
+  showScreen("block");
+}
+
+// Demo
+function startDemo(){
+  CONFIG.stimulusDurationMs = Math.max(800, parseInt(inputStimulusMs.value,10) || 1600);
+  CONFIG.itiMs = Math.max(0, parseInt(inputItiMs.value,10) || 250);
+  CONFIG.mode = "TYPES";
+  participantTag.textContent = "MODE GALERIE";
+  demoTrials = buildDemoTrials();
+  demoIndex = 0;
+  demoNext();
+}
+function demoNext(){
+  if(demoIndex >= demoTrials.length){
+    demoHeader.textContent="Galerie terminée";
+    demoNote.textContent="Reviens à l’accueil et décoche les types que tu ne veux pas utiliser.";
+    demoResult.innerHTML="<div class='muted'>Fini.</div>";
+    btnDemoNext.disabled=true;
+    setProgress(); showScreen("demo"); return;
+  }
+  const trial=demoTrials[demoIndex];
+  setProgress();
+  stimulusTitle.textContent = `${trial.title}`;
+  showScreen("stimulus");
+  startStimulus(trial, ()=> setTimeout(()=>askQ1(trial), CONFIG.itiMs));
+}
+function showDemoResult(trial){
+  demoHeader.textContent = `${trial.title} (${trial.type})`;
+  demoNote.textContent = "On affiche la réponse correcte juste pour évaluer la difficulté du type.";
+  const ok = (trial._initial.choice === trial.correct);
+  demoResult.innerHTML = `<div style="font-weight:950; font-size:16px; margin-bottom:6px;">Réponse correcte : <span style="color:rgba(104,224,194,.95)">${trial.correct}</span></div>
+    <div class="muted small">Ta réponse : ${trial._initial.choice} (${trial._initial.conf}%) — ${ok?`<span class='badge good'>Bon</span>`:`<span class='badge bad'>Faux</span>`}</div>
+    <div class="muted small" style="margin-top:8px;">Si c’est trop facile, décoche ce type dans “Types inclus”.</div>`;
+  btnDemoNext.disabled=false;
+  btnDemoNext.onclick=()=>{ demoIndex += 1; demoNext(); };
+  showScreen("demo");
+}
+
+// Export
+async function downloadFromEndpoint(endpoint, extFallback){
+  saveStatus.textContent="Préparation du fichier…";
+  const resp = await fetch(endpoint,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({participantId,sessionStartedAt,results})});
+  if(!resp.ok){ const txt=await resp.text(); saveStatus.textContent="Erreur export: "+txt.slice(0,220); throw new Error(txt); }
+  const blob=await resp.blob(); const url=URL.createObjectURL(blob);
+  const a=document.createElement("a"); let filename=`results_${participantId}.${extFallback}`;
+  const cd=resp.headers.get("Content-Disposition")||""; const m=/filename\*=UTF-8''([^;]+)|filename="([^"]+)"/i.exec(cd);
+  if(m){ filename=decodeURIComponent(m[1]||m[2]||filename); }
+  a.href=url; a.download=filename; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  saveStatus.textContent="Téléchargement lancé.";
+}
+btnExportExcel?.addEventListener("click", async()=>{ try{ await downloadFromEndpoint("/api/export","xlsx"); }catch(e){ console.error(e);} });
+btnExportCSV?.addEventListener("click", async()=>{ try{ await downloadFromEndpoint("/api/export_csv","csv"); }catch(e){ console.error(e);} });
+
+q1Conf.addEventListener("input", ()=>{ q1ConfVal.textContent=q1Conf.value; });
+q2Conf.addEventListener("input", ()=>{ q2ConfVal.textContent=q2Conf.value; });
+
+btnPickQ1?.addEventListener("click", ()=>{ applyMode("Q1"); showScreen("stimulus"); setTimeout(startSession,40); });
+btnPickQ2?.addEventListener("click", ()=>{ applyMode("Q2"); showScreen("stimulus"); setTimeout(startSession,40); });
+btnStart?.addEventListener("click", ()=>{ showScreen("stimulus"); setTimeout(startSession,40); });
+
+// preset
+const preset=(window.__PRESET_MODE__||"").trim();
+CONFIG.typesIncluded = loadTypePrefs();
+renderTypesChooser();
+
+if(preset==="Q1"||preset==="Q2"){ applyMode(preset); showScreen("stimulus"); setTimeout(startSession,80); }
+else if(preset==="TYPES"){ showScreen("stimulus"); setTimeout(startDemo,80); }
+else { applyMode("Q1"); setProgress(); showScreen("menu"); }
+
+})();
+</script>
+</body>
+</html>
